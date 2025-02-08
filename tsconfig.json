@@ -1,0 +1,7 @@
+{
+  "files": ["timer.ts"],
+  "compilerOptions": {
+    "strict": true,
+    "target": "es2023"
+  }
+}

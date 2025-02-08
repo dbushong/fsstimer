@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<head>
+  <title>MultiTimer</title>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"
+  />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    body {
+      overflow: hidden;
+    }
+
+    body,
+    dialog,
+    input {
+      font-family: sans-serif;
+      background-color: #222;
+      color: #ddd;
+    }
+
+    h1 {
+      font-size: 100%;
+      border-bottom: 1px solid #888;
+    }
+
+    button {
+      background-color: #111;
+      color: #aaa;
+      font-weight: bold;
+      text-align: center;
+      border: none;
+      border-radius: 1vw;
+      cursor: pointer;
+      font-size: 3vw;
+    }
+
+    button:active {
+      background-color: #333;
+    }
+
+    button:disabled {
+      color: #555;
+    }
+
+    .timer-name-row {
+      margin-bottom: 0.5em;
+      background-color: #333;
+    }
+
+    input.timer-name {
+      border: none;
+      font-size: 3vw;
+      font-weight: bold;
+      margin-left: 0.5em;
+      background-color: #333;
+    }
+
+    @font-face {
+      font-family: 'DSEG7';
+      src: url('DSEG/DSEG7Modern-Bold.woff2') format('woff2');
+      font-weight: bold;
+    }
+
+    .timer {
+      margin-bottom: 1em;
+      width: 100%;
+    }
+
+    .timer-ui {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .timer-ui div {
+      display: inline;
+    }
+
+    .timer-ui button {
+      width: 14vw;
+      height: 11vw;
+    }
+
+    .time-box {
+      display: inline-block;
+      position: relative;
+      font-family: 'DSEG7';
+      font-weight: bold;
+      font-size: 14vw;
+      width: 5.2em;
+      height: 1em;
+      background-color: #8a8;
+      color: #333;
+      padding: 0.2em;
+      border-radius: 0.1em;
+      cursor: pointer;
+      margin-right: 0.15em;
+    }
+
+    .time-box.neg {
+      background-color: #333;
+      color: #8a8;
+    }
+
+    .time,
+    .time-ghost {
+      position: absolute;
+      top: 0.15em;
+      left: 0.15em;
+      white-space: pre;
+    }
+
+    .time-ghost {
+      opacity: 0.1;
+    }
+
+    #num-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 80vw;
+      margin: 1em auto;
+    }
+
+    #num-buttons button {
+      min-height: 9vw;
+      height: 6.5vh;
+      border: 1px solid #555;
+    }
+
+    #num-buttons button.zero {
+      grid-column: 2 / 3;
+    }
+
+    .blinking {
+      animation: blinker 1s linear infinite;
+    }
+
+    @keyframes blinker {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    #close-usage {
+      float: right;
+      cursor: pointer;
+    }
+
+    #usage::backdrop {
+      background-color: #444;
+      opacity: 0.7;
+    }
+
+    .settings {
+      float: left;
+      margin-right: 0.5em;
+      position: relative;
+      top: -2em;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>FSS MultiTimer</h1>
+
+  <dialog id="usage">
+    <div id="close-usage">✖</div>
+    <ul>
+      <li>To set a timer, tap "Set" then enter the H:M:S, then tap the time</li>
+      <li>To stop a timer, tap the time again</li>
+      <li>After a timer has gone off, tap twice to reset to last setting</li>
+      <li>Set a timer to <tt>00:00:00</tt> to use as a count-up timer</li>
+      <li>Set a timer's name by tapping mic and saying the new name</li>
+      <li>
+        If you say "reset" for the name, it will be reset to generic "Timer N",
+        and just beep when it goes off.
+      </li>
+      <li>
+        Set time & name by hitting Set and saying something like "2 minutes 30
+        seconds" and optionally followed by "for &lt;name&gt;", e.g. "for
+        turkey" to also set the timer name. You can say "reset" to default to
+        the boring timer name + <tt>00:00:00</tt>
+      </li>
+    </ul>
+  </dialog>
+
+  <div id="timers"></div>
+
+  <div id="num-buttons">
+    <button>1</button>
+    <button>2</button>
+    <button>3</button>
+    <button>4</button>
+    <button>5</button>
+    <button>6</button>
+    <button>7</button>
+    <button>8</button>
+    <button>9</button>
+    <button class="zero">0</button>
+  </div>
+
+  <button id="show-usage" class="settings">Usage</button>
+  <button id="reset" class="settings">Reset</button>
+  <button id="reload" class="settings">↺</button>
+
+  <script src="timer.js"></script>
+</body>
