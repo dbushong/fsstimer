@@ -10,7 +10,7 @@ The idea is to use it on a spare tablet/phone, and have a more powerful
 timer for a lower cost.
 
 [See it in action](https://www.youtube.com/shorts/j5Ni3_5drxo) on a
-$36 Android tablet.
+$36 Android tablet, or [try it live](https://dbushong.github.io/fsstimer/).
 
 ## Features
 
@@ -23,7 +23,7 @@ $36 Android tablet.
 
 ## Installation
 
-1. Go to https://floatingsheep.com/timer/
+1. Go to https://dbushong.github.io/fsstimer/
 2. Choose "Add to Home Screen" from a menu on your browser
 3. Find the new icon and launch the "app" from there
 
