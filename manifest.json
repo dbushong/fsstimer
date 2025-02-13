@@ -1,6 +1,6 @@
 {
   "name": "FSS Timer",
-  "start_url": "https://floatingsheep.com/timer/",
+  "start_url": "/",
   "display": "fullscreen",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192" },
