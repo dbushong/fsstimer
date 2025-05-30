@@ -26,6 +26,24 @@ const alarmIntervals = [0, 0, 0, 0]; // for any alarms going off
 const SPEECH_RECOGNITION = 'webkitSpeechRecognition';
 let wakeLock = null;
 let setRecog = null;
+function fracRE(group) {
+    return `(?: (?: \\s+ and )? (?: \\s+ a )? \\s+ (?<${group}> half | 1/2 | quarter | 1/4 ) )?`;
+}
+const WORD_NUMBER_MAP = {
+    a: 1, an: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9
+};
+const WORD_NUMS = Object.keys(WORD_NUMBER_MAP).join('|');
+const VOICE_TIME_RE = new RegExp(`
+  ^
+  (?: (?<hrs>  (?: \\d+ | ${WORD_NUMS} ) ) ${fracRE('hrFrac1')}  \\s+ hour       s? ${fracRE('hrFrac2')}  \\s* )?
+  (?: and \\s+ )?
+  (?: (?<mins> (?: \\d+ | ${WORD_NUMS} ) ) ${fracRE('minFrac1')} \\s+ min(?:ute)?s? ${fracRE('minFrac2')} \\s* )?
+  (?: and \\s+ )?
+  (?: (?<secs> (?: \\d+ | ${WORD_NUMS} ) )                       \\s+ sec(?:ond)?s?                       \\s* )?
+  (?: timer \\s* )?
+  (?: for \\s+ (?<newName> .+ ) )?
+  $
+`.replace(/\s/g, ''), 'i');
 // seconds since epoch (rounded)
 function nowSeconds(nowMs = Date.now()) {
     return Math.round(nowMs / 1000);
@@ -167,6 +185,10 @@ function setTime(timerNum, [neg, time]) {
     timeElm.innerHTML = time;
     timeBoxElm.classList.toggle('neg', neg);
 }
+function parseVoiceTime(s, frac) {
+    const n = WORD_NUMBER_MAP[s || ''] || (s ? parseInt(s, 10) : 0);
+    return [n, (frac === 'half' || frac === '1/2') ? 30 : (frac === 'quarter' || frac === '1/4') ? 15 : 0];
+}
 function setClicked(timerNum) {
     const timeElm = getTimeElm(timerNum);
     const timer = state.timers[timerNum];
@@ -192,8 +214,7 @@ function setClicked(timerNum) {
             let input = ev.results[0][0].transcript;
             if (input === 'reset')
                 input = `0 seconds for Timer ${timerNum + 1}`;
-            const m = input &&
-                input.match(/^(?:(?<hrs>(?:\d+|one))\s+hours?(?:\s+and)?\s*)?(?:(?<mins>(?:\d+|one))\s+minutes?(?:\s+and)?\s*)?(?:(?<secs>(?:\d+|one))\s+seconds?\s*)?(?:timer\s*)?(?:for\s+(?<newName>.+))?$/i);
+            const m = input && input.match(VOICE_TIME_RE);
             const g = m && m.groups;
             if (!g || !(g.hrs || g.mins || g.secs)) {
                 alert(`Failed to parse voice input: ${JSON.stringify(input)}`);
@@ -206,14 +227,11 @@ function setClicked(timerNum) {
                 if (!isDefaultName(newName))
                     preloadSynth();
             }
-            function parse(s) {
-                if (s === 'one')
-                    return 1;
-                return s ? parseInt(s, 10) : 0;
-            }
-            const hrs = parse(g.hrs);
-            const mins = parse(g.mins);
-            const secs = parse(g.secs);
+            let [hrs, extraMins] = parseVoiceTime(g.hrs, g.hrFrac1 || g.hrFrac2);
+            let [mins, extraSecs] = parseVoiceTime(g.mins, g.minFrac1 || g.minFrac2);
+            let [secs] = parseVoiceTime(g.secs, undefined);
+            mins += extraMins;
+            secs += extraSecs;
             if (hrs > 99 || mins > 99 || secs > 99) {
                 alert(`Time segments must each be less than 100; got ${JSON.stringify(input)}`);
                 return;
