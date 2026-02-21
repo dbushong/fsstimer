@@ -33,11 +33,16 @@ const WORD_NUMBER_MAP = {
     a: 1, an: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9
 };
 const WORD_NUMS = Object.keys(WORD_NUMBER_MAP).join('|');
+/*
+example valid inputs:
+"5" -> 5 minutes
+"2 and a half hours" -> 2.5 hours
+*/
 const VOICE_TIME_RE = new RegExp(`
   ^
   (?: (?<hrs>  (?: \\d+ | ${WORD_NUMS} ) ) ${fracRE('hrFrac1')}  \\s+ hour       s? ${fracRE('hrFrac2')}  \\s* )?
   (?: and \\s+ )?
-  (?: (?<mins> (?: \\d+ | ${WORD_NUMS} ) ) ${fracRE('minFrac1')} \\s+ min(?:ute)?s? ${fracRE('minFrac2')} \\s* )?
+  (?: (?<mins> (?: \\d+ | ${WORD_NUMS} ) ) ${fracRE('minFrac1')} (?: \\s+ min(?:ute)?s? )? ${fracRE('minFrac2')} \\s* )?
   (?: and \\s+ )?
   (?: (?<secs> (?: \\d+ | ${WORD_NUMS} ) )                       \\s+ sec(?:ond)?s?                       \\s* )?
   (?: timer \\s* )?

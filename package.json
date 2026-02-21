@@ -1,4 +1,5 @@
 {
+  "name": "fsstimer",
   "dependencies": {
     "@types/dom-speech-recognition": "^0.0.4",
     "typescript": "^5.7.3"
