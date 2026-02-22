@@ -208,5 +208,9 @@
   <button id="reset" class="settings">Reset</button>
   <button id="reload" class="settings">↺</button>
 
-  <script src="timer.js"></script>
+  <script>
+    const s = document.createElement('script');
+    s.src = 'timer.js?t=' + Date.now();
+    document.body.appendChild(s);
+  </script>
 </body>

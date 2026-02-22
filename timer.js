@@ -355,6 +355,9 @@ function preloadSynth() {
         say('ready', 0);
     synthLoaded = true;
 }
+function reloadHard() {
+    location.href = location.pathname + '?t=' + Date.now();
+}
 function run() {
     state = (JSON.parse(window.localStorage.timerState || 'null') ||
         EMPTY_STATE);
@@ -426,11 +429,11 @@ function run() {
         if (confirm('Are you sure?')) {
             state = EMPTY_STATE;
             saveState();
-            location.reload();
+            reloadHard();
         }
     });
     $('#reload').addEventListener('click', () => {
-        location.reload();
+        reloadHard();
     });
     const usageElm = $('#usage', HTMLDialogElement);
     $('#show-usage').addEventListener('click', () => {
@@ -514,4 +517,7 @@ function hideColons() {
         }
     });
 }
-document.addEventListener('DOMContentLoaded', run);
+if (document.readyState !== 'loading')
+    run();
+else
+    document.addEventListener('DOMContentLoaded', run);

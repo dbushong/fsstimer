@@ -425,6 +425,10 @@ function preloadSynth() {
   synthLoaded = true;
 }
 
+function reloadHard() {
+  location.href = location.pathname + '?t=' + Date.now();
+}
+
 function run() {
   state = (JSON.parse(window.localStorage.timerState || 'null') ||
     EMPTY_STATE) as TimerState;
@@ -505,12 +509,12 @@ function run() {
     if (confirm('Are you sure?')) {
       state = EMPTY_STATE;
       saveState();
-      location.reload();
+      reloadHard();
     }
   });
 
   $('#reload').addEventListener('click', () => {
-    location.reload();
+    reloadHard();
   });
 
   const usageElm = $('#usage', HTMLDialogElement);
@@ -606,4 +610,5 @@ function hideColons() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', run);
+if (document.readyState !== 'loading') run();
+else document.addEventListener('DOMContentLoaded', run);
