@@ -61,11 +61,11 @@ example valid inputs:
 */
 const VOICE_TIME_RE = new RegExp(`
   ^
-  (?: (?<hrs>  (?: \\d+ | ${WORD_NUMS} ) ) ${fracRE('hrFrac1')}  \\s+ hour       s? ${fracRE('hrFrac2')}  \\s* )?
+  (?: (?<hrs>  (?: \\d+ | ${WORD_NUMS} ) ) (?!\\d) ${fracRE('hrFrac1')}  \\s+ hour       s? ${fracRE('hrFrac2')}  \\s* )?
   (?: and \\s+ )?
-  (?: (?<mins> (?: \\d+ | ${WORD_NUMS} ) ) ${fracRE('minFrac1')} (?: \\s+ min(?:ute)?s? )? ${fracRE('minFrac2')} \\s* )?
+  (?: (?<mins> (?: \\d+ | ${WORD_NUMS} ) ) (?!\\d) ${fracRE('minFrac1')} (?: \\s+ min(?:ute)?s? )? ${fracRE('minFrac2')} \\s* )?
   (?: and \\s+ )?
-  (?: (?<secs> (?: \\d+ | ${WORD_NUMS} ) )                       \\s+ sec(?:ond)?s?                       \\s* )?
+  (?: (?<secs> (?: \\d+ | ${WORD_NUMS} ) ) (?!\\d)                      \\s+ sec(?:ond)?s?                       \\s* )?
   (?: timer \\s* )?
   (?: for \\s+ (?<newName> .+ ) )?
   $
