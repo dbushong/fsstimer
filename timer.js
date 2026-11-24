@@ -217,7 +217,7 @@ function setClicked(timerNum) {
         setRecog.addEventListener('result', (ev) => {
             setRecog = null;
             let input = ev.results[0][0].transcript;
-            if (input === 'reset')
+            if (input && input.toLowerCase() === 'reset')
                 input = `0 seconds for Timer ${timerNum + 1}`;
             const m = input && input.match(VOICE_TIME_RE);
             const g = m && m.groups;
@@ -336,7 +336,7 @@ function nameMicTap(timerNum) {
     const recog = new window[SPEECH_RECOGNITION]();
     recog.addEventListener('result', (ev) => {
         let newName = ev.results[0][0].transcript;
-        if (newName === 'reset')
+        if (newName && newName.toLowerCase() === 'reset')
             newName = `Timer ${timerNum + 1}`;
         $('.timer-name', HTMLInputElement, getTimerElm(timerNum)).value =
             state.timers[timerNum].name = newName;
